@@ -7,9 +7,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var twentyPercent: UIButton!
     @IBOutlet weak var numberInput: UITextField!
     
-//    var cost = 100.00
-//    var percent = 0.0
-//    var splitAmount = 1
     var calcBrain = CalculatorBrain()
     var selectedButton = UIButton()
     
@@ -26,7 +23,6 @@ class ViewController: UIViewController {
     }
     
     @IBAction func priceChanged(_ sender: Any) {
-//        cost = Double(numberInput.text!) ?? 0.00
         calcBrain.updatePrice(newPrice: numberInput.text!)
     }
     
@@ -35,17 +31,12 @@ class ViewController: UIViewController {
         
         switch sender.currentTitle {
         case "0%":
-//            percent = 0.00
             calcBrain.updatePercent(newPercent: 0.00)
             selectedButton = zeroPercent
-
         case "10%":
-//            percent = 10.00
             calcBrain.updatePercent(newPercent: 10.00)
             selectedButton = tenPercent
-
         case "20%":
-//            percent = 20.00
             calcBrain.updatePercent(newPercent: 20.00)
             selectedButton = twentyPercent
         default:
@@ -65,7 +56,6 @@ class ViewController: UIViewController {
     
     @IBAction func changeSplitAmount(_ sender: UIStepper) {
         splitAmountLabel.text = "\(Int(sender.value))"
-//        splitAmount = Int(sender.value)
         calcBrain.updateSplit(newSplit: Int(sender.value))
     }
     
@@ -77,9 +67,6 @@ class ViewController: UIViewController {
         if segue.identifier == "goToResult" {
             print("Segue to ResultViewController")
             let destinationVC = segue.destination as! ResultViewController
-//            destinationVC.cost = cost
-//            destinationVC.percent = percent
-//            destinationVC.splitAmount = splitAmount
             destinationVC.cost = calcBrain.cost
             destinationVC.percent = calcBrain.percent
             destinationVC.splitAmount = calcBrain.splitAmount
