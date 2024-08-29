@@ -8,7 +8,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var numberInput: UITextField!
     
     var cost = 100.00
-    var percent = 1.00
+    var percent = 0.0
     var splitAmount = 1
     
     override func viewDidLoad() {
@@ -24,13 +24,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func priceChanged(_ sender: Any) {
-        cost = Double(numberInput.text!)!
+        cost = Double(numberInput.text!) ?? 0.00
     }
     
     @IBAction func changedTipAmount(_ sender: UIButton) {
         switch sender.currentTitle {
         case "0%":
-            percent = 1.00
+            percent = 0.00
             sender.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
             sender.setTitleColor(UIColor.white, for: .normal)
             tenPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
             twentyPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
             twentyPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
         case "10%":
-            percent = 1.10
+            percent = 10.00
             sender.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
             sender.setTitleColor(UIColor.white, for: .normal)
             zeroPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
             twentyPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
             twentyPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
         case "20%":
-            percent = 1.20
+            percent = 20.00
             sender.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
             sender.setTitleColor(UIColor.white, for: .normal)
             tenPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
@@ -60,10 +60,25 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @IBAction func changeSplitAmount(_ sender: UIStepper) {
         splitAmountLabel.text = "\(Int(sender.value))"
         splitAmount = Int(sender.value)
+    }
+    
+    @IBAction func calculatePressed(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "goToResult", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToResult" {
+            print("Segue to ResultViewController")
+            let destinationVC = segue.destination as! ResultViewController
+            destinationVC.cost = cost
+            destinationVC.percent = percent
+            destinationVC.splitAmount = splitAmount
+        } else {
+            print("Unexpected segue identifier")
+        }
     }
     
     func addDoneButtonOnKeyboard() {
