@@ -7,9 +7,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var twentyPercent: UIButton!
     @IBOutlet weak var numberInput: UITextField!
     
-    var cost = 100.00
-    var percent = 0.0
-    var splitAmount = 1
+//    var cost = 100.00
+//    var percent = 0.0
+//    var splitAmount = 1
+    var calcBrain = CalculatorBrain()
+    var selectedButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,45 +26,47 @@ class ViewController: UIViewController {
     }
     
     @IBAction func priceChanged(_ sender: Any) {
-        cost = Double(numberInput.text!) ?? 0.00
+//        cost = Double(numberInput.text!) ?? 0.00
+        calcBrain.updatePrice(newPrice: numberInput.text!)
     }
     
     @IBAction func changedTipAmount(_ sender: UIButton) {
+        let buttons = [zeroPercent, tenPercent, twentyPercent]
+        
         switch sender.currentTitle {
         case "0%":
-            percent = 0.00
-            sender.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
-            sender.setTitleColor(UIColor.white, for: .normal)
-            tenPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
-            tenPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
-            twentyPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
-            twentyPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
+//            percent = 0.00
+            calcBrain.updatePercent(newPercent: 0.00)
+            selectedButton = zeroPercent
+
         case "10%":
-            percent = 10.00
-            sender.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
-            sender.setTitleColor(UIColor.white, for: .normal)
-            zeroPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
-            zeroPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
-            twentyPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
-            twentyPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
+//            percent = 10.00
+            calcBrain.updatePercent(newPercent: 10.00)
+            selectedButton = tenPercent
+
         case "20%":
-            percent = 20.00
-            sender.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
-            sender.setTitleColor(UIColor.white, for: .normal)
-            tenPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
-            tenPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
-            zeroPercent.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
-            zeroPercent.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
+//            percent = 20.00
+            calcBrain.updatePercent(newPercent: 20.00)
+            selectedButton = twentyPercent
         default:
             print("Error")
-            sender.backgroundColor = UIColor(named: "#45B887")
-            sender.setTitleColor(UIColor.white, for: .normal)
+        }
+        
+        for button in buttons {
+            if selectedButton == button {
+                button!.backgroundColor = UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0)
+                button!.setTitleColor(UIColor.white, for: .normal)
+            } else {
+                button!.setTitleColor(UIColor(red: 69/255.0, green: 184/255.0, blue: 135/255.0, alpha: 1.0), for: .normal)
+                button!.backgroundColor = UIColor(red: 231/255.0, green: 250/255.0, blue: 244/255.0, alpha: 1.0)
+            }
         }
     }
     
     @IBAction func changeSplitAmount(_ sender: UIStepper) {
         splitAmountLabel.text = "\(Int(sender.value))"
-        splitAmount = Int(sender.value)
+//        splitAmount = Int(sender.value)
+        calcBrain.updateSplit(newSplit: Int(sender.value))
     }
     
     @IBAction func calculatePressed(_ sender: UIButton) {
@@ -73,9 +77,12 @@ class ViewController: UIViewController {
         if segue.identifier == "goToResult" {
             print("Segue to ResultViewController")
             let destinationVC = segue.destination as! ResultViewController
-            destinationVC.cost = cost
-            destinationVC.percent = percent
-            destinationVC.splitAmount = splitAmount
+//            destinationVC.cost = cost
+//            destinationVC.percent = percent
+//            destinationVC.splitAmount = splitAmount
+            destinationVC.cost = calcBrain.cost
+            destinationVC.percent = calcBrain.percent
+            destinationVC.splitAmount = calcBrain.splitAmount
         } else {
             print("Unexpected segue identifier")
         }
